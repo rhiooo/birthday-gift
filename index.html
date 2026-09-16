@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Animated Birthday Gift</title>
+
+  <style>
+    :root {
+      --pink: #f36f89;
+      --light-pink: #ffc8d2;
+      --dark: #77515a;
+      --paper: #fff0f2;
+      --grid: #f4dadd;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+    }
+
+    body {
+      margin: 0;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+      background: #10171d;
+    }
+
+    button {
+      font-family: inherit;
+    }
+
+    /* Main birthday card */
+
+    .card {
+      position: relative;
+      width: min(94vw, 920px);
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      border: 8px solid white;
+      border-radius: 7px;
+      background-color: var(--paper);
+      background-image:
+        linear-gradient(var(--grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+      background-size: 24px 24px;
+      box-shadow: 0 24px 65px rgba(0, 0, 0, 0.55);
+    }
+
+    /* Bunting */
+
+    .bunting {
+      position: absolute;
+      top: -5px;
+      left: 0;
+      width: 100%;
+      height: 110px;
+      opacity: 0;
+    }
+
+    .play .bunting {
+      animation: buntingEntrance 0.7s 0.3s forwards;
+    }
+
+    .string {
+      position: absolute;
+      top: 16px;
+      width: 35%;
+      height: 2px;
+      background: #d77889;
+    }
+
+    .string-left {
+      left: -5%;
+      transform: rotate(7deg);
+    }
+
+    .string-right {
+      right: -5%;
+      transform: rotate(-7deg);
+    }
+
+    .flag {
+      position: absolute;
+      top: 17px;
+      width: 0;
+      height: 0;
+      border-left: 14px solid transparent;
+      border-right: 14px solid transparent;
+      border-top: 30px solid var(--pink);
+      transform-origin: top center;
+      animation: flagSwing 1.2s ease-in-out infinite alternate;
+    }
+
+    .flag:nth-of-type(even) {
+      border-top-color: #ff9aaa;
+    }
+
+    .f1 { left: 1%; }
+    .f2 { left: 6%; top: 20px; }
+    .f3 { left: 11%; top: 23px; }
+    .f4 { left: 16%; top: 26px; }
+    .f5 { left: 21%; top: 29px; }
+    .f6 { left: 26%; top: 32px; }
+
+    .f7 { right: 1%; }
+    .f8 { right: 6%; top: 20px; }
+    .f9 { right: 11%; top: 23px; }
+    .f10 { right: 16%; top: 26px; }
+    .f11 { right: 21%; top: 29px; }
+    .f12 { right: 26%; top: 32px; }
+
+    /* Birthday greeting */
+
+    .greeting {
+      position: absolute;
+      top: 30%;
+      left: 8%;
+      z-index: 5;
+      transform: rotate(-2deg);
+    }
+
+    .happy,
+    .birthday {
+      width: max-content;
+      line-height: 0.84;
+      font-weight: 900;
+      letter-spacing: -4px;
+      opacity: 0;
+      -webkit-text-stroke: 5px var(--dark);
+      paint-order: stroke fill;
+      filter: drop-shadow(5px 5px 0 #dab0b7);
+      transform-origin: left center;
+    }
+
+    .happy {
+      color: white;
+      font-size: clamp(45px, 8vw, 90px);
+    }
+
+    .birthday {
+      color: var(--pink);
+      font-size: clamp(47px, 8.2vw, 94px);
+    }
+
+    .play .happy {
+      animation: textEntrance 0.7s 2.6s forwards;
+    }
+
+    .play .birthday {
+      animation: textEntrance 0.7s 3s forwards;
+    }
+
+    .underline {
+      width: 0;
+      height: 10px;
+      margin-top: 20px;
+      margin-left: 8px;
+      border-radius: 10px;
+      background: var(--pink);
+      box-shadow: 0 6px 0 #efb3bd;
+    }
+
+    .play .underline {
+      animation: underlineEntrance 0.6s 3.7s forwards;
+    }
+
+    /* Heart particles */
+
+    .particle {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      z-index: 2;
+      color: var(--pink);
+      font-weight: bold;
+      opacity: 0;
+    }
+
+    .play .particle {
+      animation: scatter 1.8s var(--delay) ease-out forwards;
+    }
+
+    /* Bear character */
+
+    .bear {
+      position: absolute;
+      right: 4%;
+      bottom: -55%;
+      z-index: 6;
+      width: 31%;
+      aspect-ratio: 1;
+    }
+
+    .play .bear {
+      animation: bearEntrance 0.9s 4s forwards;
+    }
+
+    .ear {
+      position: absolute;
+      top: 9%;
+      width: 34%;
+      height: 34%;
+      border: 6px solid var(--dark);
+      border-radius: 50%;
+      background: #ffb5c3;
+    }
+
+    .ear::after {
+      content: "";
+      position: absolute;
+      inset: 22%;
+      border-radius: 50%;
+      background: #f6839b;
+    }
+
+    .ear-left {
+      left: 6%;
+    }
+
+    .ear-right {
+      right: 6%;
+    }
+
+    .bear-head {
+      position: absolute;
+      top: 18%;
+      right: 10%;
+      bottom: 4%;
+      left: 10%;
+      border: 6px solid var(--dark);
+      border-radius: 49% 49% 46% 46%;
+      background: var(--light-pink);
+      box-shadow:
+        inset 0 -18px 0 #f5a9b7,
+        5px 8px 0 #d9afb6;
+    }
+
+    .hair {
+      position: absolute;
+      top: -8%;
+      left: 32%;
+      width: 35%;
+      height: 23%;
+      border-radius: 50%;
+      background: #ff8fa5;
+      transform: rotate(-6deg);
+    }
+
+    .eye {
+      position: absolute;
+      top: 40%;
+      width: 8%;
+      height: 12%;
+      border-radius: 50%;
+      background: #63444b;
+    }
+
+    .eye::after {
+      content: "";
+      position: absolute;
+      top: 10%;
+      left: 18%;
+      width: 35%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: white;
+    }
+
+    .eye-left {
+      left: 28%;
+    }
+
+    .eye-right {
+      right: 28%;
+    }
+
+    .blush {
+      position: absolute;
+      top: 56%;
+      width: 17%;
+      height: 8%;
+      border-radius: 50%;
+      background: rgba(244, 126, 150, 0.7);
+    }
+
+    .blush-left {
+      left: 12%;
+    }
+
+    .blush-right {
+      right: 12%;
+    }
+
+    .muzzle {
+      position: absolute;
+      top: 52%;
+      left: 34%;
+      width: 32%;
+      height: 28%;
+      border-radius: 48%;
+      background: #fff9f1;
+    }
+
+    .muzzle::before {
+      content: "";
+      position: absolute;
+      top: 18%;
+      left: 40%;
+      width: 20%;
+      height: 17%;
+      border-radius: 50%;
+      background: #754851;
+    }
+
+    .muzzle::after {
+      content: "";
+      position: absolute;
+      top: 43%;
+      left: 30%;
+      width: 40%;
+      height: 27%;
+      border-bottom: 4px solid #754851;
+      border-radius: 50%;
+    }
+
+    .hat {
+      position: absolute;
+      top: -4%;
+      left: 41%;
+      z-index: 2;
+      width: 0;
+      height: 0;
+      border-left: 34px solid transparent;
+      border-right: 34px solid transparent;
+      border-bottom: 83px solid var(--pink);
+      filter: drop-shadow(0 3px 0 var(--dark));
+      transform: rotate(-4deg);
+    }
+
+    .hat::before {
+      content: "";
+      position: absolute;
+      top: 78px;
+      left: -38px;
+      width: 76px;
+      height: 9px;
+      border-radius: 9px;
+      background: #ffd063;
+    }
+
+    .hat::after {
+      content: "";
+      position: absolute;
+      top: -10px;
+      left: -10px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #ffd063;
+    }
+
+    .paw {
+      position: absolute;
+      bottom: 2%;
+      display: grid;
+      place-items: center;
+      width: 27%;
+      height: 27%;
+      border: 5px solid var(--dark);
+      border-radius: 50%;
+      color: var(--pink);
+      background: #ffd5dc;
+      font-size: 25px;
+    }
+
+    .paw-left {
+      left: 0;
+      transform: rotate(18deg);
+    }
+
+    .paw-right {
+      right: 0;
+      transform: rotate(-18deg);
+    }
+
+    .speech {
+      position: absolute;
+      top: 1%;
+      right: -7%;
+      padding: 8px 12px;
+      border: 4px solid var(--dark);
+      border-radius: 50%;
+      color: var(--pink);
+      background: white;
+      font-size: clamp(12px, 2vw, 22px);
+      font-weight: 900;
+      opacity: 0;
+    }
+
+    .play .speech {
+      animation: popIn 0.45s 4.8s forwards;
+    }
+
+    /* Open-letter button */
+
+    .letter-button {
+      position: absolute;
+      right: 27%;
+      bottom: 7%;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 10px 16px;
+      border: 3px solid var(--dark);
+      border-radius: 25px;
+      color: var(--dark);
+      background: white;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      opacity: 0;
+      box-shadow: 0 5px 0 #d9afb6;
+    }
+
+    .play .letter-button {
+      animation: showButton 0.6s 5.3s forwards;
+    }
+
+    .letter-button:hover {
+      background: #fff1f4;
+    }
+
+    .envelope-icon {
+      font-size: 24px;
+      animation: bounce 1.2s infinite;
+    }
+
+    /* Letter overlay */
+
+    .letter-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      visibility: hidden;
+      opacity: 0;
+      background: rgba(25, 16, 20, 0.78);
+      backdrop-filter: blur(6px);
+      transition:
+        opacity 0.4s ease,
+        visibility 0.4s ease;
+    }
+
+    .letter-overlay.visible {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .envelope-scene {
+      position: relative;
+      width: min(90vw, 600px);
+      height: min(85vh, 620px);
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      opacity: 0;
+      transform: translateY(250px) scale(0.2);
+      transition:
+        opacity 0.4s,
+        transform 0.7s cubic-bezier(0.2, 1.5, 0.4, 1);
+    }
+
+    .letter-overlay.visible .envelope-scene {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .envelope {
+      position: relative;
+      width: min(82vw, 480px);
+      height: 300px;
+      perspective: 1200px;
+    }
+
+    .envelope-back {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      border: 5px solid var(--dark);
+      border-radius: 8px;
+      background: #ffb7c5;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.35);
+    }
+
+    .envelope-front {
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      overflow: hidden;
+      border: 5px solid var(--dark);
+      border-radius: 8px;
+      background:
+        linear-gradient(32deg, #ffc8d2 49%, transparent 50%),
+        linear-gradient(-32deg, #ffc8d2 49%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .envelope-flap {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 6;
+      width: 100%;
+      height: 58%;
+      background: #f590a5;
+      clip-path: polygon(0 0, 100% 0, 50% 100%);
+      transform-origin: top center;
+      transition:
+        transform 0.8s 0.4s,
+        z-index 0s 0.8s;
+    }
+
+    .heart-seal {
+      position: absolute;
+      top: 43%;
+      left: 50%;
+      z-index: 7;
+      display: grid;
+      place-items: center;
+      width: 50px;
+      height: 50px;
+      border: 4px solid var(--dark);
+      border-radius: 50%;
+      color: white;
+      background: #f35f7d;
+      font-size: 25px;
+      transform: translate(-50%, -50%);
+      transition: 0.3s 0.3s;
+    }
+
+    /* Paper letter */
+
+    .paper-letter {
+      position: absolute;
+      left: 5%;
+      bottom: 10px;
+      z-index: 2;
+      width: 90%;
+      height: 260px;
+      border: 4px solid var(--dark);
+      border-radius: 8px;
+      background-color: #fffdf8;
+      background-image:
+        linear-gradient(#f6e9e4 1px, transparent 1px);
+      background-size: 100% 28px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
+      transition:
+        width 0.8s 1.1s,
+        height 0.8s 1.1s,
+        left 0.8s 1.1s,
+        bottom 0.8s 0.8s,
+        transform 0.8s 0.8s;
+    }
+
+    .letter-content {
+      height: 100%;
+      overflow-y: auto;
+      padding: 42px 45px 45px;
+      color: #62434a;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 17px;
+      line-height: 1.75;
+      opacity: 0;
+      transition: opacity 0.6s 1.7s;
+    }
+
+    .letter-content h2 {
+      margin: 0 0 25px;
+      color: #ed6682;
+      font-family: Arial, sans-serif;
+      font-size: clamp(27px, 5vw, 42px);
+      text-align: center;
+    }
+
+    .letter-content p {
+      margin: 0 0 20px;
+    }
+
+    .signature {
+      margin-top: 35px !important;
+      color: #d55471;
+      font-style: italic;
+      font-weight: bold;
+    }
+
+    /* Open envelope state */
+
+    .envelope-scene.opened .envelope-flap {
+      z-index: 0;
+      transform: rotateX(180deg);
+    }
+
+    .envelope-scene.opened .heart-seal {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0);
+    }
+
+    .envelope-scene.opened .paper-letter {
+      left: -6%;
+      bottom: 0;
+      z-index: 8;
+      width: 112%;
+      height: min(78vh, 540px);
+      transform: translateY(-80px);
+    }
+
+    .envelope-scene.opened .letter-content {
+      opacity: 1;
+    }
+
+    .close-letter {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      z-index: 20;
+      width: 36px;
+      height: 36px;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      color: white;
+      background: var(--dark);
+      font-size: 26px;
+      line-height: 1;
+      cursor: pointer;
+      opacity: 0;
+      transition:
+        opacity 0.3s 1.8s,
+        background 0.2s;
+    }
+
+    .envelope-scene.opened .close-letter {
+      opacity: 1;
+    }
+
+    .close-letter:hover {
+      background: var(--pink);
+    }
+
+    .opening-text {
+      position: absolute;
+      bottom: -15px;
+      left: 50%;
+      width: 100%;
+      color: white;
+      font-weight: bold;
+      text-align: center;
+      transform: translateX(-50%);
+      transition: opacity 0.3s;
+    }
+
+    .envelope-scene.opened .opening-text {
+      opacity: 0;
+    }
+
+    /* Replay */
+
+    .replay-button {
+      position: absolute;
+      right: 14px;
+      bottom: 13px;
+      z-index: 20;
+      padding: 8px 14px;
+      border: 0;
+      border-radius: 20px;
+      color: white;
+      background: var(--dark);
+      font-weight: bold;
+      cursor: pointer;
+      opacity: 0.25;
+    }
+
+    .replay-button:hover {
+      opacity: 1;
+    }
+
+    /* Animations */
+
+    @keyframes buntingEntrance {
+      from {
+        opacity: 0;
+        transform: translateY(-80px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes flagSwing {
+      from {
+        transform: rotate(-7deg);
+      }
+
+      to {
+        transform: rotate(7deg);
+      }
+    }
+
+    @keyframes textEntrance {
+      0% {
+        opacity: 0;
+        transform: translateX(-120%) scale(0.6);
+      }
+
+      70% {
+        opacity: 1;
+        transform: translateX(5%) scale(1.1);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+      }
+    }
+
+    @keyframes underlineEntrance {
+      to {
+        width: 74%;
+      }
+    }
+
+    @keyframes scatter {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.2);
+      }
+
+      20% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0;
+        transform:
+          translate(
+            calc(-50% + var(--x)),
+            calc(-50% + var(--y))
+          )
+          rotate(var(--rotation))
+          scale(1.3);
+      }
+    }
+
+    @keyframes bearEntrance {
+      0% {
+        bottom: -55%;
+        transform: rotate(16deg) scale(0.65);
+      }
+
+      75% {
+        bottom: -2%;
+        transform: rotate(-4deg) scale(1.05);
+      }
+
+      100% {
+        bottom: -4%;
+        transform: rotate(0) scale(1);
+      }
+    }
+
+    @keyframes popIn {
+      0% {
+        opacity: 0;
+        transform: scale(0);
+      }
+
+      80% {
+        opacity: 1;
+        transform: scale(1.2);
+      }
+
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes showButton {
+      from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.5);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes bounce {
+      0%,
+      100% {
+        transform: translateY(0) rotate(-5deg);
+      }
+
+      50% {
+        transform: translateY(-5px) rotate(5deg);
+      }
+    }
+
+    /* Mobile display */
+
+    @media (max-width: 600px) {
+      .card {
+        width: 100vw;
+        height: 100vh;
+        border: 0;
+        border-radius: 0;
+        aspect-ratio: auto;
+      }
+
+      .greeting {
+        top: 34%;
+        left: 5%;
+      }
+
+      .happy,
+      .birthday {
+        -webkit-text-stroke: 3px var(--dark);
+      }
+
+      .bear {
+        right: 0;
+        width: 48%;
+      }
+
+      .letter-button {
+        right: 10px;
+        bottom: 14%;
+        padding: 8px 11px;
+        font-size: 12px;
+      }
+
+      .envelope-icon {
+        font-size: 20px;
+      }
+
+      .envelope {
+        width: 86vw;
+        height: 240px;
+      }
+
+      .envelope-scene.opened .paper-letter {
+        left: 0;
+        width: 100%;
+        height: 75vh;
+        transform: translateY(-90px);
+      }
+
+      .letter-content {
+        padding: 42px 24px 30px;
+        font-size: 15px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="card" id="birthdayCard">
+
+    <!-- Bunting -->
+    <div class="bunting">
+      <div class="string string-left"></div>
+      <div class="string string-right"></div>
+
+      <i class="flag f1"></i>
+      <i class="flag f2"></i>
+      <i class="flag f3"></i>
+      <i class="flag f4"></i>
+      <i class="flag f5"></i>
+      <i class="flag f6"></i>
+
+      <i class="flag f7"></i>
+      <i class="flag f8"></i>
+      <i class="flag f9"></i>
+      <i class="flag f10"></i>
+      <i class="flag f11"></i>
+      <i class="flag f12"></i>
+    </div>
+
+    <!-- Particles -->
+    <div id="particles"></div>
+
+    <!-- Birthday greeting -->
+    <section class="greeting">
+      <div class="happy">Happy</div>
+      <div class="birthday">Birthday</div>
+      <div class="underline"></div>
+    </section>
+
+    <!-- Bear -->
+    <div class="bear">
+      <div class="ear ear-left"></div>
+      <div class="ear ear-right"></div>
+
+      <div class="hat"></div>
+
+      <div class="bear-head">
+        <div class="hair"></div>
+
+        <div class="eye eye-left"></div>
+        <div class="eye eye-right"></div>
+
+        <div class="blush blush-left"></div>
+        <div class="blush blush-right"></div>
+
+        <div class="muzzle"></div>
+      </div>
+
+      <div class="paw paw-left">♥</div>
+      <div class="paw paw-right">♥</div>
+
+      <div class="speech">YAY!</div>
+    </div>
+
+    <!-- Open-letter button -->
+    <button class="letter-button" id="letterButton" type="button">
+      <span class="envelope-icon">💌</span>
+      <span>Open my letter</span>
+    </button>
+
+    <button class="replay-button" id="replayButton" type="button">
+      Replay
+    </button>
+  </main>
+
+  <!-- Letter pop-up -->
+  <div class="letter-overlay" id="letterOverlay">
+
+    <div class="envelope-scene" id="envelopeScene">
+
+      <div class="envelope">
+
+        <div class="envelope-back"></div>
+
+        <article class="paper-letter">
+
+          <button
+            class="close-letter"
+            id="closeLetter"
+            type="button"
+            aria-label="Close letter"
+          >
+            ×
+          </button>
+
+          <div class="letter-content">
+
+            <h2>Happy Birthday, my love! 🎂</h2>
+
+            <p>My Dear Lifna,</p>
+
+            <p>
+              I hope this special day brings you happiness, laughter, and
+              beautiful memories. You deserve a birthday filled with all the
+              things that make you smile.
+            </p>
+
+            <p>
+              Thank you for being such a wonderful person. Your kindness,
+              support, and presence are appreciated more than words can
+              completely express.
+            </p>
+
+            <p>
+              As you begin another year, I hope you continue to discover new
+              opportunities, achieve your goals, and create memories that you
+              will always treasure.
+            </p>
+
+            <p>
+              May you always have the courage to follow your dreams, the
+              strength to overcome difficult moments, and many reasons to
+              remain hopeful and happy.
+            </p>
+
+            <p>
+              Enjoy your celebration and every wonderful moment that comes
+              with it. I love you! And once again, happy birthday!
+            </p>
+
+            <p class="signature">
+              Your cute girlfriend,<br>
+              Sarah
+            </p>
+
+          </div>
+        </article>
+
+        <div class="envelope-front"></div>
+        <div class="envelope-flap"></div>
+        <div class="heart-seal">♥</div>
+
+      </div>
+
+      <p class="opening-text">Opening your birthday letter… Don't blink!</p>
+
+    </div>
+  </div>
+
+  <script>
+    const birthdayCard =
+      document.getElementById("birthdayCard");
+
+    const particlesContainer =
+      document.getElementById("particles");
+
+    const replayButton =
+      document.getElementById("replayButton");
+
+    const letterButton =
+      document.getElementById("letterButton");
+
+    const letterOverlay =
+      document.getElementById("letterOverlay");
+
+    const envelopeScene =
+      document.getElementById("envelopeScene");
+
+    const closeLetter =
+      document.getElementById("closeLetter");
+
+    let openingTimer;
+
+    /* Create heart particles */
+
+    function createParticles() {
+      particlesContainer.innerHTML = "";
+
+      const totalParticles = 60;
+
+      for (let i = 0; i < totalParticles; i++) {
+        const particle =
+          document.createElement("span");
+
+        const angle =
+          Math.random() * Math.PI * 2;
+
+        const distance =
+          50 +
+          Math.random() *
+          Math.min(
+            birthdayCard.clientWidth,
+            birthdayCard.clientHeight
+          ) *
+          0.32;
+
+        particle.className = "particle";
+
+        particle.textContent =
+          i % 4 === 0 ? "♥" : "•";
+
+        particle.style.fontSize =
+          8 + Math.random() * 14 + "px";
+
+        particle.style.setProperty(
+          "--x",
+          Math.cos(angle) * distance + "px"
+        );
+
+        particle.style.setProperty(
+          "--y",
+          Math.sin(angle) * distance + "px"
+        );
+
+        particle.style.setProperty(
+          "--rotation",
+          Math.random() * 360 - 180 + "deg"
+        );
+
+        particle.style.setProperty(
+          "--delay",
+          0.8 + Math.random() * 1.2 + "s"
+        );
+
+        particlesContainer.appendChild(particle);
+      }
+    }
+
+    /* Start or replay main animation */
+
+    function playAnimation() {
+      birthdayCard.classList.remove("play");
+
+      void birthdayCard.offsetWidth;
+
+      createParticles();
+
+      birthdayCard.classList.add("play");
+    }
+
+    /* Open birthday letter */
+
+    function openBirthdayLetter() {
+      clearTimeout(openingTimer);
+
+      envelopeScene.classList.remove("opened");
+      letterOverlay.classList.add("visible");
+
+      openingTimer = setTimeout(() => {
+        envelopeScene.classList.add("opened");
+      }, 850);
+    }
+
+    /* Close birthday letter */
+
+    function closeBirthdayLetter() {
+      clearTimeout(openingTimer);
+
+      envelopeScene.classList.remove("opened");
+
+      setTimeout(() => {
+        letterOverlay.classList.remove("visible");
+      }, 400);
+    }
+
+    /* Buttons */
+
+    letterButton.addEventListener(
+      "click",
+      openBirthdayLetter
+    );
+
+    closeLetter.addEventListener(
+      "click",
+      closeBirthdayLetter
+    );
+
+    replayButton.addEventListener("click", () => {
+      closeBirthdayLetter();
+      playAnimation();
+    });
+
+    /* Close by clicking outside the letter */
+
+    letterOverlay.addEventListener("click", (event) => {
+      if (event.target === letterOverlay) {
+        closeBirthdayLetter();
+      }
+    });
+
+    /* Close using Escape key */
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        closeBirthdayLetter();
+      }
+    });
+
+    /* Start when page loads */
+
+    window.addEventListener("load", () => {
+      playAnimation();
+    });
+  </script>
+
+</body>
+</html>
